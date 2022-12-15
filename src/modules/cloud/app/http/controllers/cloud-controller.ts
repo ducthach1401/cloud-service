@@ -15,12 +15,11 @@ import { normalizeResponseData } from 'src/core/helpers/utils';
 import { PaginationParams } from 'src/core/models/pagination-params';
 import { ErrorCode } from 'src/exceptions/error-code';
 import { LogicalException } from 'src/exceptions/logical-exception';
-import { Public } from 'src/modules/auth/app/decorators/metadata';
 import { GetObjectsUsecase } from 'src/modules/cloud/domain/usecases/get-objects-usecase';
 import { ShowFileUsecase } from 'src/modules/cloud/domain/usecases/show-file-usecase';
 import { UploadFileUsecase } from 'src/modules/cloud/domain/usecases/upload-file-usecase';
+import { GetObjectsQueryDto, ShowFileParamDto } from '../../dtos/cloud-dto';
 
-@Public()
 @Controller('api/v1/cloud')
 export class CloudController {
   constructor(
@@ -30,7 +29,7 @@ export class CloudController {
   ) {}
 
   @Get()
-  async getObjects(@Query() query: any, @Res() res: Response) {
+  async getObjects(@Query() query: GetObjectsQueryDto, @Res() res: Response) {
     const objects = await this.getObjectsUsecase.call(
       query.search,
       new PaginationParams(),
@@ -39,7 +38,7 @@ export class CloudController {
   }
 
   @Get('show/:name')
-  async showFile(@Param() params: any, @Res() res: Response) {
+  async showFile(@Param() params: ShowFileParamDto, @Res() res: Response) {
     const file = await this.showFileUsecase.call(params.name);
     createReadStream(file.path).pipe(res);
   }

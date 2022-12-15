@@ -7,3 +7,8 @@ export class GetObjectsQueryDto extends PartialType(PaginationParamsDto) {
   @IsString()
   search: string | undefined;
 }
+
+export class ShowFileParamDto {
+  @IsString()
+  name: string;
+}
