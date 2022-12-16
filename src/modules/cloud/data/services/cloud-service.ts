@@ -68,7 +68,12 @@ export class CloudService {
     const payload = new FormData();
     const path =
       'public/' +
-      JSON.stringify(new Date()).split('T')[0].slice(1).split('-').join('/');
+      JSON.stringify(new Date())
+        .split('T')[0]
+        .slice(1)
+        .split('-')
+        .slice(0, 2)
+        .join('/');
     payload.append('file', createReadStream(file.path), {
       filename: uuidv4() + extname(file.originalname),
     });
