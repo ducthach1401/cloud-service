@@ -23,7 +23,7 @@ services:
       - MINIO_ACCESS_KEY=${S3_ACCESS_KEY}
       - MINIO_SECRET_KEY=${S3_SECRET_KEY}
   storage:
-    image: thachpro000/storage-service:0.0.2
+    image: ducthach1401/storage-service:0.0.1
     restart: on-failure
     env_file:
       - ../.env.storage

@@ -32,7 +32,12 @@ export class CloudController {
   async getObjects(@Query() query: GetObjectsQueryDto, @Res() res: Response) {
     const objects = await this.getObjectsUsecase.call(
       query.search,
-      new PaginationParams(),
+      new PaginationParams(
+        query.page,
+        query.limit,
+        query.need_total_count,
+        query.only_count,
+      ),
     );
     res.json(objects);
   }

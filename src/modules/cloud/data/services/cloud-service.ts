@@ -91,7 +91,6 @@ export class CloudService {
         },
       ),
     );
-
     renameSync(file.path, '/tmp/remove');
   }
 }
