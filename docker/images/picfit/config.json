@@ -1,0 +1,12 @@
+{
+  "port": 3001,
+  "storage": {
+    "dst": {
+      "type": "fs",
+      "location": "/tmp"
+    }
+  },
+  "kvstore": {
+    "type": "cache"
+  }
+}

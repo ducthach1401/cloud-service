@@ -27,6 +27,15 @@ services:
     restart: on-failure
     env_file:
       - ../.env.storage
+  picfit:
+    image: thoas/picfit:0.9.0
+    restart: on-failure
+    ports:
+      - '${PICFIT_PORT}:3001'
+    volumes:
+      - ./images/picfit/config.json:/var/config.json
+    environment:
+      - PICFIT_CONFIG_PATH=/var/config.json
   postgres:
     image: postgres:12-alpine
     restart: on-failure

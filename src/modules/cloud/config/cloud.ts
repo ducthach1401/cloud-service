@@ -7,5 +7,6 @@ export default registerAs('cloud', () => ({
     clientSecret: process.env.STORAGE_CLIENT_SECRET,
     publicUrl: process.env.STORAGE_PUBLIC_URL,
     bucket: process.env.STORAGE_BUCKET,
+    picfitUrl: process.env.STORAGE_PICFIT_URL,
   },
 }));

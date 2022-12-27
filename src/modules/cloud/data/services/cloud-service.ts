@@ -7,6 +7,7 @@ import { createReadStream, createWriteStream, renameSync } from 'fs';
 import * as FormData from 'form-data';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
+import { PicfitModel } from '../../domain/models/picfit-model';
 
 @Injectable()
 export class CloudService {
@@ -60,6 +61,27 @@ export class CloudService {
       responseType: 'stream',
     });
     fileStream.data.pipe(file);
+    return file;
+  }
+
+  async showPicfit(pathUrl: string, options: PicfitModel): Promise<any> {
+    const picfitUrl = this.configService.get<string>('cloud.storage.picfitUrl');
+    const publicUrl = this.configService.get<string>('cloud.storage.publicUrl');
+    const bucket = this.configService.get<string>('cloud.storage.bucket');
+    const imageUrl = `${publicUrl}/${bucket}/${encodeURI(pathUrl)}`;
+
+    const file = createWriteStream(`/tmp/cache`);
+    const resizeImage = await this.httpService.axiosRef({
+      baseURL: picfitUrl,
+      url: 'display',
+      params: {
+        url: imageUrl,
+        ...options.toJson(true),
+      },
+      method: 'get',
+      responseType: 'stream',
+    });
+    resizeImage.data.pipe(file);
     return file;
   }
 

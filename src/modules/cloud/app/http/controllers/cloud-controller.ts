@@ -15,10 +15,15 @@ import { normalizeResponseData } from 'src/core/helpers/utils';
 import { PaginationParams } from 'src/core/models/pagination-params';
 import { ErrorCode } from 'src/exceptions/error-code';
 import { LogicalException } from 'src/exceptions/logical-exception';
+import { PicfitModel } from 'src/modules/cloud/domain/models/picfit-model';
 import { GetObjectsUsecase } from 'src/modules/cloud/domain/usecases/get-objects-usecase';
 import { ShowFileUsecase } from 'src/modules/cloud/domain/usecases/show-file-usecase';
 import { UploadFileUsecase } from 'src/modules/cloud/domain/usecases/upload-file-usecase';
-import { GetObjectsQueryDto, ShowFileParamDto } from '../../dtos/cloud-dto';
+import {
+  GetObjectsQueryDto,
+  ShowFileParamDto,
+  ShowFileQueryDto,
+} from '../../dtos/cloud-dto';
 
 @Controller('api/v1/cloud')
 export class CloudController {
@@ -43,8 +48,17 @@ export class CloudController {
   }
 
   @Get('show/:name')
-  async showFile(@Param() params: ShowFileParamDto, @Res() res: Response) {
-    const file = await this.showFileUsecase.call(params.name);
+  async showFile(
+    @Param() params: ShowFileParamDto,
+    @Query() query: ShowFileQueryDto,
+    @Res() res: Response,
+  ) {
+    const file = await this.showFileUsecase.call(
+      params.name,
+      Object.keys(query).length
+        ? new PicfitModel(query.operation, query.height, query.weight)
+        : undefined,
+    );
     createReadStream(file.path).pipe(res);
   }
 
