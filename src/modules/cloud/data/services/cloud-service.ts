@@ -32,6 +32,9 @@ export class CloudService {
     return `Bearer ${response.data.access_token}`;
   }
 
+  private randomInt(number: number) {
+    return Math.round(Math.random() * number);
+  }
   async list(search: string, paginationParams: PaginationParams): Promise<any> {
     const token = await this.auth();
     const response = await lastValueFrom(
@@ -53,7 +56,7 @@ export class CloudService {
   async show(pathUrl: string): Promise<any> {
     const publicUrl = this.configService.get<string>('cloud.storage.publicUrl');
     const bucket = this.configService.get<string>('cloud.storage.bucket');
-    const file = createWriteStream(`/tmp/cache`);
+    const file = createWriteStream(`/tmp/${this.randomInt(100)}`);
     const fileStream = await this.httpService.axiosRef({
       baseURL: `${publicUrl}/${bucket}`,
       url: encodeURI(pathUrl),
@@ -70,7 +73,7 @@ export class CloudService {
     const bucket = this.configService.get<string>('cloud.storage.bucket');
     const imageUrl = `${publicUrl}/${bucket}/${encodeURI(pathUrl)}`;
 
-    const file = createWriteStream(`/tmp/cache`);
+    const file = createWriteStream(`/tmp/${this.randomInt(100)}`);
     const resizeImage = await this.httpService.axiosRef({
       baseURL: picfitUrl,
       url: 'display',
