@@ -2,6 +2,7 @@ import { PageList } from '../models/page-list';
 import { DomainModel } from '../models/domain-model';
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import { FileValidator } from '@nestjs/common';
 
 export function throwError(errorMessage = ''): never {
   throw new Error(errorMessage);
@@ -40,3 +41,21 @@ export const readJsonFile = async (fileName: string): Promise<any> => {
   const stringData = data.toString();
   return JSON.parse(stringData);
 };
+
+export class FileTypeValidatorExtend extends FileValidator<
+  Record<string, any>
+> {
+  constructor() {
+    super({});
+  }
+
+  isValid(file: any): boolean {
+    const extensionFile = ['image', 'video'];
+    const mimeType = file.mimetype.split('/')[0];
+    return extensionFile.includes(mimeType);
+  }
+
+  buildErrorMessage(): string {
+    return 'File invalid!';
+  }
+}

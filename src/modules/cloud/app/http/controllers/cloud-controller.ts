@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseFilePipe,
   Post,
   Query,
   Res,
@@ -11,7 +12,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { createReadStream } from 'fs';
-import { normalizeResponseData } from 'src/core/helpers/utils';
+import {
+  FileTypeValidatorExtend,
+  normalizeResponseData,
+} from 'src/core/helpers/utils';
 import { PaginationParams } from 'src/core/models/pagination-params';
 import { ErrorCode } from 'src/exceptions/error-code';
 import { LogicalException } from 'src/exceptions/logical-exception';
@@ -65,7 +69,12 @@ export class CloudController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidatorExtend()],
+      }),
+    )
+    file: Express.Multer.File,
     @Res() res: Response,
   ) {
     if (!file) {
